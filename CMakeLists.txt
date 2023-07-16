@@ -16,7 +16,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Sql
 
 #添加需要支持的语言
 set(LanguageFile
-    中文.ts
+    Chinese.ts
     English.ts
 )
 set(RC version.rc)
