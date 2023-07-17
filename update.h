@@ -13,6 +13,10 @@
 #include <QCoreApplication>
 #include <QMessageBox>
 #include <QLineEdit>
+#include <QPushButton>
+#include <QComboBox>
+#include <QGroupBox>
+#include <QTimer>
 
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -32,17 +36,21 @@ private:
     //窗体控件
     QLabel * labelTitle = nullptr;      //大标题
 
-    QLabel * labelSoftWareName = nullptr;   //软件名字
+    QLabel * labelCurrentVersion = nullptr; //当前软件版本
 
-    QLabel * labelNowVersion = nullptr; //当前程序版本
+    QLabel * labelVersionList = nullptr;    //软件版本清单名字
+    QComboBox * comboboxVersionList = nullptr;  //版本清单
+    QPushButton * btnCheckUpdate = nullptr;     //检查最新版本
+    QPushButton * btnGetHistory = nullptr;      //获取历史版本
+    QGroupBox * groupVersionInf = nullptr;      //版本相关信息
 
-    QLabel * labelNewVersion = nullptr; //最新程序版本
-
-    QLabel * labelUpdateTime = nullptr; //更新时间
-
+    QLabel * labelSoftWareName = nullptr;       //软件名字
+    QLabel * labelSoftWareVersion = nullptr;    //软件版本
+    QLabel * labelSoftWareUpdateTime = nullptr; //更新时间
     QTextEdit * texteditUpdateInf = nullptr;    //更新内容
 
-    QProgressBar * progressbarPercent = nullptr;//进度条
+    QProgressBar * progressbarPercent = nullptr;    //更新进度
+    QPushButton * btnStartUpdate = nullptr;         //开始更新按钮
 
 private:
     QString sqladdress = "";        //mysql数据库地址
@@ -55,7 +63,7 @@ private:
     QString softwarecurrentversion = "";    //当前软件版本
 
     QString softwarename = "";      //要更新的软件名字
-    QString softwarelastversion = "";   //最新软件版本
+    QString softwareversion = "";   //最新软件版本
     QString softwareupdateinf = "";     //更新内容
     QString softwareupdatetime = "";    //软件更新时间
     QString softwareaddress = "";       //软件下载地址
