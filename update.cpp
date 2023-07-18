@@ -85,7 +85,7 @@ void update::configlayout()
     labelVersionList = new QLabel(this);
     comboboxVersionList = new QComboBox(this);
     comboboxVersionList->setSizeAdjustPolicy(QComboBox::AdjustToContents);
-    comboboxVersionList->setMinimumWidth(150);
+ //   comboboxVersionList->setMinimumWidth(150);
     btnCheckUpdate = new QPushButton(this);
     connect(btnCheckUpdate,&QPushButton::clicked,this,[=]{
         checkUpdate();
@@ -96,6 +96,9 @@ void update::configlayout()
         if(softwareversion != softwarecurrentversion){
             btnStartUpdate->setEnabled(true);
             QMessageBox::information(this,tr("提示"),tr("发现新版本：") + softwareversion );
+        }
+        else {
+            QMessageBox::information(this,tr("提示"),tr("暂未发现新版本"));
         }
     });
     btnGetHistory = new QPushButton(this);
