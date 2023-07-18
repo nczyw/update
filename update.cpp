@@ -103,6 +103,9 @@ void update::configlayout()
         }
     });
     btnGetHistory = new QPushButton(this);
+    connect(btnGetHistory,&QPushButton::clicked,this,[=]{
+        getHistroyVersion();
+    });
 
     auto hboxManage = new QHBoxLayout;
     hboxManage->addWidget(labelVersionList);
@@ -135,6 +138,7 @@ void update::configlayout()
     progressbarPercent = new QProgressBar(this);
     //progressbarPercent->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     progressbarPercent->setAlignment(Qt::AlignCenter);
+    progressbarPercent->setValue(0);
     //progressbarPercent->setValue(50);
     btnStartUpdate = new QPushButton(this);
 
@@ -195,23 +199,7 @@ void update::checkUpdate()
 
         QSqlQuery query(db);
         QString cmd;
-#if 0
-        cmd = QString("select * from %1").arg(sqltablename);
-        query.exec(cmd);
-        for(int i = 0 ; i < query.record().count() ; i += 1){
-            auto name = query.record().fieldName(i);
-            qDebug() << name;
-        }
-#endif
-#if 0
-        qDebug() << sqltablename;
-        cmd = QString("select * from %1").arg(sqltablename);
-        query.exec(cmd);
-        query.first();
-        for(int i = 0 ; i < 6 ; i+= 1){
-            qDebug() << query.value(i).toString();
-        }
-#endif \
+
     //获取最新的软件版本
         cmd = QString("select name from %1 where versionattribute = 'lastversion'").arg(sqltablename);
         if(query.exec(cmd)){
@@ -254,6 +242,68 @@ void update::checkUpdate()
 
         QTimer::singleShot(0,qApp,SLOT(quit()));
     }
+    if(db.isOpen()) db.close();
+}
+
+void update::getHistroyVersion()
+{
+    comboboxVersionList->clear();
+    texteditUpdateInf->clear();
+    progressbarPercent->setValue(0);
+    btnStartUpdate->setEnabled(false);
+    if(db.contains(sqlname)){
+        db = QSqlDatabase::database(sqlname);
+    }
+    else {
+        db = QSqlDatabase::addDatabase(sqltype,sqlname);
+    }
+
+    db.setHostName(sqladdress);
+    db.setPort(sqlport);
+    db.setDatabaseName(sqldatabasename);
+    db.setUserName(sqlusername);
+    db.setPassword(sqlpassword);
+    if(db.open()){
+        QSqlQuery query(db);
+        QString cmd;
+        //获取历史版本
+        cmd = QString("select version from %1 where versionattribute = 'histroyversion'").arg(sqltablename);
+        if(query.exec(cmd)){
+            while (query.next()) {  //添加历史版本
+                comboboxVersionList->addItem(query.value(0).toString());
+            }
+        }
+        else {
+            qDebug() << query.lastError().text();
+        }
+    }
+    else{
+        qDebug() << db.lastError().text();
+        QMessageBox::critical(this,tr("错误"),tr("数据库连接错误,请检查数据库配置"));
+
+        QTimer::singleShot(0,qApp,SLOT(quit()));
+    }
+    if(db.isOpen()) db.close();
+}
+
+void update::changeVersion()
+{
+    progressbarPercent->setValue(0);
+    btnStartUpdate->setEnabled(false);
+
+    if(db.contains(sqlname)){
+        db = QSqlDatabase::database(sqlname);
+    }
+    else {
+        db = QSqlDatabase::addDatabase(sqltype,sqlname);
+    }
+
+    db.setHostName(sqladdress);
+    db.setPort(sqlport);
+    db.setDatabaseName(sqldatabasename);
+    db.setUserName(sqlusername);
+    db.setPassword(sqlpassword);
+
 }
 
 void update::changeEvent(QEvent *e)

@@ -86,6 +86,16 @@ private:
      */
     void checkUpdate(void);
 
+    /**
+     * @brief getHistroyVersion 获取历史版本
+     */
+    void getHistroyVersion(void);
+
+    /**
+     * @brief changeVersion 改变版本
+     */
+    void changeVersion(void);
+
 protected:
     void changeEvent(QEvent * e);
 };
