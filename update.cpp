@@ -98,6 +98,7 @@ void update::configlayout()
             QMessageBox::information(this,tr("提示"),tr("发现新版本：") + softwareversion );
         }
         else {
+            btnStartUpdate->setEnabled(false);
             QMessageBox::information(this,tr("提示"),tr("暂未发现新版本"));
         }
     });
