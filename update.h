@@ -81,6 +81,11 @@ private:
      * @param mainwindow
      */
     void retranslateUi(QMainWindow * mainwindow);
+
+    /**
+     * @brief databaseInit  数据库连接
+     */
+    void databaseInit(void);
     /**
      * @brief checkUpdate   检查更新
      */

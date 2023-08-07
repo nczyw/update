@@ -19,8 +19,12 @@ set(LanguageFile
     Chinese.ts
     English.ts
 )
-set(RC version.rc)
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    set(RC version.rc)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(RC "")
+endif()
 set(PROJECT_SOURCES
         ${RC}
         README.md

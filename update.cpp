@@ -1,12 +1,14 @@
 #include "update.h"
-
 update::update(int argc, char *argv[], QWidget *parent)
     : QMainWindow(parent)
 {
-
     if(argc != 9 && argc != 2){ //只传递软件版本，使用默认参数工作
+        qDebug() << argc;
         QMessageBox::critical(this,tr("错误"),tr("传入参数错误，程序无法运行"));
-        QTimer::singleShot(0,qApp,SLOT(quit()));
+        QTimer::singleShot(0,this,[=]{
+            qApp->exit(0);
+        });
+        return;
     }
 
     QString str = argv[1];
@@ -58,13 +60,15 @@ update::update(int argc, char *argv[], QWidget *parent)
 
     configlayout();
 
-
+    databaseInit();
 
     retranslateUi(this);
 }
 
 update::~update()
 {
+    if(db.isOpen()) db.close();
+    qDebug() << "更新程序退出";
 }
 
 void update::configlayout()
@@ -180,7 +184,7 @@ void update::retranslateUi(QMainWindow *mainwindow)
     btnStartUpdate->setText(tr("开始更新"));
 }
 
-void update::checkUpdate()
+void update::databaseInit()
 {
     if(db.contains(sqlname)){
         db = QSqlDatabase::database(sqlname);
@@ -194,7 +198,18 @@ void update::checkUpdate()
     db.setDatabaseName(sqldatabasename);
     db.setUserName(sqlusername);
     db.setPassword(sqlpassword);
-    if(db.open()){
+    if(!db.open()){
+        qDebug() << db.lastError().text();
+        QMessageBox::critical(this,tr("错误"),tr("数据库连接错误,请检查数据库配置") + "\n" + db.lastError().text());
+        QTimer::singleShot(0,qApp,SLOT(quit()));
+    }
+
+}
+
+void update::checkUpdate()
+{
+
+    if(db.isOpen()){
         //qDebug() << "数据库打开成功";// << db.tables();
 
         QSqlQuery query(db);
@@ -238,11 +253,9 @@ void update::checkUpdate()
     }
     else{
         qDebug() << db.lastError().text();
-        QMessageBox::critical(this,tr("错误"),tr("数据库连接错误,请检查数据库配置"));
-
+        QMessageBox::critical(this,tr("错误"),tr("更新服务器未连接成功")  + "\n" + db.lastError().text());
         QTimer::singleShot(0,qApp,SLOT(quit()));
     }
-    if(db.isOpen()) db.close();
 }
 
 void update::getHistroyVersion()
@@ -251,19 +264,8 @@ void update::getHistroyVersion()
     texteditUpdateInf->clear();
     progressbarPercent->setValue(0);
     btnStartUpdate->setEnabled(false);
-    if(db.contains(sqlname)){
-        db = QSqlDatabase::database(sqlname);
-    }
-    else {
-        db = QSqlDatabase::addDatabase(sqltype,sqlname);
-    }
 
-    db.setHostName(sqladdress);
-    db.setPort(sqlport);
-    db.setDatabaseName(sqldatabasename);
-    db.setUserName(sqlusername);
-    db.setPassword(sqlpassword);
-    if(db.open()){
+    if(db.isOpen()){
         QSqlQuery query(db);
         QString cmd;
         //获取历史版本
@@ -279,30 +281,16 @@ void update::getHistroyVersion()
     }
     else{
         qDebug() << db.lastError().text();
-        QMessageBox::critical(this,tr("错误"),tr("数据库连接错误,请检查数据库配置"));
-
+        QMessageBox::critical(this,tr("错误"),tr("更新服务器未连接成功")  + "\n" + db.lastError().text());
         QTimer::singleShot(0,qApp,SLOT(quit()));
     }
-    if(db.isOpen()) db.close();
+
 }
 
 void update::changeVersion()
 {
     progressbarPercent->setValue(0);
     btnStartUpdate->setEnabled(false);
-
-    if(db.contains(sqlname)){
-        db = QSqlDatabase::database(sqlname);
-    }
-    else {
-        db = QSqlDatabase::addDatabase(sqltype,sqlname);
-    }
-
-    db.setHostName(sqladdress);
-    db.setPort(sqlport);
-    db.setDatabaseName(sqldatabasename);
-    db.setUserName(sqlusername);
-    db.setPassword(sqlpassword);
 
 }
 
