@@ -17,6 +17,7 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QTimer>
+#include <QDebug>
 
 #include <QSqlDatabase>
 #include <QSqlError>

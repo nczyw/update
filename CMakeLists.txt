@@ -55,16 +55,25 @@ else()
         )
     endif()
 endif()
+#配置语言安装目录
+
 if(QT_VERSION_MAJOR EQUAL 6)
-    #配置语言安装目录
     set_source_files_properties(${LanguageFile}
         PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/language"
         )
     #生成翻译文件。顺便去除失效的翻译，如果已经用Linguist进行翻译去，需要先用Linguist找到失效的翻译，删除翻译内容，才能有效的去除无效翻译
+    message("Qt6 language")
     qt_add_translations(${PROJECT_NAME}
         TS_FILES ${LanguageFile}
         LUPDATE_OPTIONS -no-obsolete
         )
+#[[
+elseif(QT_VERSION_MAJOR EQUAL 5)
+    message("Qt5 language")
+    qt5_add_translation(${PROJECT_NAME}
+        TS_FILES ${LanguageFile}
+        )
+]]
 endif()
 #查找要mysql运行关键文件
 file(GLOB mysqllib ${CMAKE_CURRENT_LIST_DIR}/mysql/*.dll)
