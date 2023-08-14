@@ -2,7 +2,7 @@
 update::update(int argc, char *argv[], QWidget *parent)
     : QMainWindow(parent)
 {
-    //后面参数改为--传递，这样方便拓展
+    //后面参数改为--传递，这样方便
     if(argc != 9 && argc != 2){ //只传递软件版本，使用默认参数工作
         qDebug() << argc;
         QMessageBox::critical(this,tr("错误"),tr("传入参数错误，程序无法运行"));
