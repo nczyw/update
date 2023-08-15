@@ -10,9 +10,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(${CMAKE_CURRENT_LIST_DIR}/language/languageConfig.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/qcustomplot/qcustomplotConfig.cmake)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools Sql )
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Sql )
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools Sql)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Sql)
+
+
+
 
 #添加需要支持的语言
 set(LanguageFile
@@ -53,8 +57,12 @@ else()
         add_executable(update
             ${PROJECT_SOURCES}
         )
+
     endif()
 endif()
+
+
+
 #配置语言安装目录
 
 if(QT_VERSION_MAJOR EQUAL 6)
@@ -85,7 +93,7 @@ file(GLOB mysqllib ${CMAKE_CURRENT_LIST_DIR}/7z/*.*)
 #复制到运行目录
 file(COPY ${mysqllib} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-target_link_libraries(update PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql Language_lib)
+target_link_libraries(update PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Sql QcustomPlot_lib Language_lib)
 
 set_target_properties(update PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
