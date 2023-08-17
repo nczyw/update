@@ -24,6 +24,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
+
 class update : public QMainWindow
 {
     Q_OBJECT
@@ -73,6 +74,16 @@ private:
     QString sqlname = "databaseupgrade";
 
 private:
+
+    const QString _address = "--address";       //数据库地址
+    const QString _port = "--port";             //数据库端口
+    const QString _type = "--type";             //数据库类型
+    const QString _databasename = "--database"; //数据库名字
+    const QString _username = "--username";     //用户名
+    const QString _password = "--password";      //密码
+    const QString _tablename = "--tablename";   //表格名字
+    const QString _version = "--version";       //软件版本号
+
     /**
      * @brief configlayout  界面布局
      */

@@ -3,57 +3,69 @@ update::update(int argc, char *argv[], QWidget *parent)
     : QMainWindow(parent)
 {
 
-    //后面参数改为--传递，这样方便
-    if(argc != 9 && argc != 2){ //只传递软件版本，使用默认参数工作
-        qDebug() << argc;
+
+    if((argc - 1) % 2 == 1){
         QMessageBox::critical(this,tr("错误"),tr("传入参数错误，程序无法运行"));
         QTimer::singleShot(0,this,[=]{
             qApp->exit(0);
         });
         return;
     }
+    sqladdress = "127.0.0.1";
+    sqlport = 3306;
+    sqltype = "QMYSQL";
+    sqldatabasename ="upgrade";
+    sqlusername = "upgrade";
+    sqlpassword = "123456";
+    sqltablename = "upgrade";
+    softwarecurrentversion = "";
+    for(int i = 1 ; i < argc ; i += 2){
 
-    QString str = argv[1];
-    //也传递*号时，表示使用默认参数
-    if(argc == 2){
-        sqladdress = "127.0.0.1";
-        sqlport = 3306;
-        sqltype = "QMYSQL";
-        sqldatabasename ="upgrade";
-        sqlusername = "upgrade";
-        sqlpassword = "123456";
-        sqltablename = "upgrade";
-        softwarecurrentversion = argv[2];
+        QString argi = argv[i];
+        QString argp = argv[i + 1];
+
+        if(argi == _address){        //数据库地址
+            sqladdress = argp;
+        }
+        else if(argi == _port){     //数据库端口
+            sqlport = argp.toInt();
+        }
+        else if(argi == _type){     //数据库类型
+            sqltype = argp;
+        }
+        else if(argi == _databasename){     //数据库名字
+            sqldatabasename = argp;
+        }
+        else if(argi == _username){     //用户名
+            sqlusername = argp;
+        }
+        else if(argi == _password){     //密码
+            sqlpassword = argp;
+        }
+        else if(argi == _tablename){     //表格名字
+            sqltablename = argp;
+        }
+        else if(argi == _version){     //程序版本
+            softwarecurrentversion = argp;
+        }
     }
-    else {
-        str == "*" ? sqladdress = "127.0.0.1" : sqladdress = str;
-
-        str = argv[2];
-        str == "*" ? sqlport = 3306 : sqlport = str.toInt();
-
-        str = argv[3];
-        str == "*" ? sqltype = "QMYSQL" : sqltype = str;
-
-        str = argv[4];
-        str == "*" ? sqldatabasename ="upgrade" : sqldatabasename = str;
-
-        str = argv[5];
-        str == "*" ? sqlusername = "upgrade" : sqlusername = str ;
-
-        str = argv[6];
-        str == "*" ? sqlpassword = "123456" : sqlpassword = str ;
-
-        str = argv[7];
-        str == "*" ? sqltablename = "upgrade" : sqltablename = str ;
-
-
-        softwarecurrentversion = argv[8];
+    if(softwarecurrentversion.trimmed() == ""){ //如果程序版本传递的不对也要退出程序
+        QMessageBox::critical(this,tr("错误"),tr("程序版本未传递，程序无法运行"));
+        QTimer::singleShot(0,this,[=]{
+            qApp->exit(0);
+        });
+        return;
     }
-#if 0
-    for(int i = 1 ; i < argc ; i += 1){
-        qDebug() << argv[i];
-    }
-#endif
+    /*
+    qDebug() << "地址：" << sqladdress;
+    qDebug() << "端口：" << sqlport;
+    qDebug() << "类型：" << sqltype;
+    qDebug() << "数据库：" << sqldatabasename;
+    qDebug() << "用户：" << sqlusername;
+    qDebug() << "密码：" << sqlpassword;
+    qDebug() << "表格：" << sqltablename;
+    qDebug() << "版本：" << softwarecurrentversion;
+*/
     QFont font;
     font.setFamily("WenQuanYi Micro Hei");
     //font.setFamily("WenQuanYi Micro Hei Mono");
