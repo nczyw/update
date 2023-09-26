@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(${CMAKE_CURRENT_LIST_DIR}/language/languageConfig.cmake)
+#qcustomplotConfig.cmake
+#include(${CMAKE_CURRENT_LIST_DIR}/qcustomplot/qcustomplotConfig.cmake)
 
 find_package(QT NAMES Qt6 Qt5)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Sql)

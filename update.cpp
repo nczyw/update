@@ -2,8 +2,6 @@
 update::update(int argc, char *argv[], QWidget *parent)
     : QMainWindow(parent)
 {
-
-
     if((argc - 1) % 2 == 1){
         QMessageBox::critical(this,tr("错误"),tr("传入参数错误，程序无法运行"));
         QTimer::singleShot(0,this,[=]{
